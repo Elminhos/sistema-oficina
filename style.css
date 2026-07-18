@@ -1,0 +1,430 @@
+/* ============================================================
+   OFICINA · FINANCEIRO E PREÇOS
+   Estilo pensado para pessoa de idade:
+   - Fontes grandes
+   - Alto contraste
+   - Botões grandes e fáceis de tocar
+   - Layout limpo, sem menus escondidos
+   ============================================================ */
+
+/* ---------- 1. Variáveis de cor e tamanho (fácil de ajustar) ---------- */
+:root {
+  --cor-fundo:        #EEF2F5;   /* fundo claro */
+  --cor-branco:       #FFFFFF;   /* cartões */
+  --cor-texto:        #1A2027;   /* texto escuro, bem legível */
+  --cor-texto-suave:  #4A5560;   /* textos secundários */
+
+  --cor-primaria:     #0C5C74;   /* azul-petróleo (ações principais) */
+  --cor-primaria-esc: #084657;
+  --cor-acento:       #E4620E;   /* laranja "tinta" (destaques) */
+
+  --cor-lucro:        #1B7F4B;   /* verde (positivo / confiável) */
+  --cor-lucro-claro:  #E4F4EB;
+  --cor-gasto:        #C0392B;   /* vermelho (gastos) */
+  --cor-gasto-claro:  #FCEBE9;
+  --cor-faturamento:  #0C5C74;
+
+  --borda:            #D5DEE4;
+  --sombra:           0 3px 10px rgba(26, 32, 39, 0.10);
+  --raio:             16px;
+
+  /* Tamanhos de fonte grandes por padrão */
+  --fonte-base:       18px;
+  --fonte-botao:      22px;
+}
+
+/* ---------- 2. Reset básico ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  font-size: var(--fonte-base);
+  line-height: 1.5;
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- 3. Cabeçalho e abas ---------- */
+.topo {
+  background: var(--cor-branco);
+  border-bottom: 3px solid var(--borda);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  box-shadow: var(--sombra);
+}
+
+.topo-conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 18px 6px;
+}
+
+.marca { display: flex; align-items: center; gap: 12px; }
+.marca-icone { font-size: 34px; }
+.marca-titulo { font-size: 26px; font-weight: 800; color: var(--cor-primaria); }
+.marca-sub { font-size: 16px; color: var(--cor-texto-suave); }
+
+/* Abas: dois botões grandes lado a lado */
+.abas {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 6px 12px 12px;
+  display: flex;
+  gap: 10px;
+}
+
+.aba {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 10px;
+  font-size: var(--fonte-botao);
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--cor-texto-suave);
+  background: #F0F3F5;
+  border: 3px solid transparent;
+  border-radius: var(--raio);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.aba-icone { font-size: 26px; }
+.aba:hover { background: #E3E9ED; }
+
+.aba-ativa {
+  color: #FFFFFF;
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria-esc);
+}
+.aba-ativa:hover { background: var(--cor-primaria-esc); }
+
+/* ---------- 4. Aviso "Salvo com sucesso" ---------- */
+.aviso {
+  max-width: 1100px;
+  margin: 14px auto 0;
+  padding: 16px 20px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  color: #FFFFFF;
+  background: var(--cor-lucro);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  animation: aparece .25s ease;
+}
+.aviso-erro { background: var(--cor-gasto); }
+@keyframes aparece { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; } }
+
+/* ---------- 5. Área de conteúdo ---------- */
+.conteudo {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 18px 40px;
+}
+
+.painel { display: none; }
+.painel-ativo { display: block; animation: aparece .2s ease; }
+
+.bloco-titulo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--cor-texto);
+  margin-bottom: 14px;
+}
+
+/* ---------- 6. Barra de controle (mês + importar) ---------- */
+.barra-controle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.campo-mes { display: flex; flex-direction: column; gap: 6px; }
+.campo-mes-rotulo { font-size: 18px; font-weight: 700; }
+
+.seletor-mes {
+  font-size: 22px;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--cor-texto);
+  padding: 14px 18px;
+  border: 3px solid var(--cor-primaria);
+  border-radius: var(--raio);
+  background: var(--cor-branco);
+  cursor: pointer;
+  min-width: 220px;
+}
+
+/* ---------- 7. Botões gerais ---------- */
+.botao {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fonte-botao);
+  font-weight: 700;
+  font-family: inherit;
+  padding: 15px 24px;
+  border: none;
+  border-radius: var(--raio);
+  cursor: pointer;
+  transition: transform .1s ease, background .15s ease;
+}
+.botao:active { transform: scale(0.97); }
+
+.botao-primario { color: #FFFFFF; background: var(--cor-primaria); }
+.botao-primario:hover { background: var(--cor-primaria-esc); }
+
+.botao-secundario {
+  color: var(--cor-primaria);
+  background: var(--cor-branco);
+  border: 3px solid var(--cor-primaria);
+}
+.botao-secundario:hover { background: #EAF1F4; }
+
+/* ---------- 8. Cartões de destaque ---------- */
+.cartoes-destaque {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cartao {
+  background: var(--cor-branco);
+  border-radius: var(--raio);
+  padding: 22px 24px;
+  box-shadow: var(--sombra);
+  border-left: 10px solid var(--borda);
+}
+.cartao-rotulo { font-size: 18px; font-weight: 700; color: var(--cor-texto-suave); margin-bottom: 6px; }
+.cartao-valor { font-size: 34px; font-weight: 800; }
+
+.cartao-faturamento { border-left-color: var(--cor-faturamento); }
+.cartao-faturamento .cartao-valor { color: var(--cor-faturamento); }
+.cartao-gastos { border-left-color: var(--cor-gasto); }
+.cartao-gastos .cartao-valor { color: var(--cor-gasto); }
+.cartao-lucro { border-left-color: var(--cor-lucro); }
+.cartao-lucro .cartao-valor { color: var(--cor-lucro); }
+
+/* ---------- 9. Bloco de gráfico (rosquinha + barra) ---------- */
+.bloco-grafico {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  background: var(--cor-branco);
+  border-radius: var(--raio);
+  padding: 24px;
+  box-shadow: var(--sombra);
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.rosquinha-area { display: flex; justify-content: center; }
+
+/* Rosquinha feita com conic-gradient (sem biblioteca) */
+.rosquinha {
+  --porcentagem: 0;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--cor-lucro) calc(var(--porcentagem) * 1%),
+    var(--cor-gasto-claro) 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .4s ease;
+}
+.rosquinha-centro {
+  width: 128px;
+  height: 128px;
+  background: var(--cor-branco);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 2px var(--borda);
+}
+.rosquinha-centro span { font-size: 40px; font-weight: 800; color: var(--cor-lucro); }
+.rosquinha-centro small { font-size: 16px; color: var(--cor-texto-suave); }
+
+.barra-titulo { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.barra-fundo {
+  height: 34px;
+  background: var(--cor-gasto);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.barra-preenchida {
+  height: 100%;
+  width: 0;
+  background: var(--cor-lucro);
+  border-radius: 20px 0 0 20px;
+  transition: width .5s ease;
+}
+.barra-legenda { margin-top: 10px; font-size: 16px; color: var(--cor-texto-suave); }
+.ponto { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: middle; }
+.ponto-lucro { background: var(--cor-lucro); }
+.ponto-gasto { background: var(--cor-gasto); }
+
+/* ---------- 10. Lista de gastos ---------- */
+.bloco-lista {
+  background: var(--cor-branco);
+  border-radius: var(--raio);
+  padding: 24px;
+  box-shadow: var(--sombra);
+}
+.lista-gastos { list-style: none; }
+.item-gasto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 4px;
+  border-bottom: 2px solid var(--borda);
+  font-size: 20px;
+}
+.item-gasto:last-child { border-bottom: none; }
+.item-gasto-nome { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+.item-gasto-icone {
+  font-size: 22px;
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cor-gasto-claro);
+  border-radius: 12px;
+}
+.item-gasto-valor { font-weight: 800; color: var(--cor-gasto); white-space: nowrap; }
+.lista-vazia { padding: 24px; text-align: center; font-size: 20px; color: var(--cor-texto-suave); }
+
+/* ---------- 11. Aba de busca ---------- */
+.busca-topo { margin-bottom: 22px; }
+
+.busca-linha {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.campo-busca {
+  flex: 1;
+  min-width: 220px;
+  font-size: 22px;
+  font-family: inherit;
+  padding: 16px 20px;
+  border: 3px solid var(--cor-primaria);
+  border-radius: var(--raio);
+  background: var(--cor-branco);
+  color: var(--cor-texto);
+}
+.campo-busca::placeholder { color: #909AA3; }
+
+.filtros { display: flex; flex-wrap: wrap; gap: 10px; }
+.filtro {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 12px 20px;
+  border: 3px solid var(--borda);
+  border-radius: 40px;
+  background: var(--cor-branco);
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.filtro:hover { border-color: var(--cor-primaria); color: var(--cor-primaria); }
+.filtro-ativo {
+  background: var(--cor-primaria);
+  color: #FFFFFF;
+  border-color: var(--cor-primaria-esc);
+}
+
+/* ---------- 12. Cartões de resultado ---------- */
+.resultados {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.cartao-produto {
+  background: var(--cor-branco);
+  border-radius: var(--raio);
+  padding: 20px 22px;
+  box-shadow: var(--sombra);
+  border: 2px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.produto-topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.produto-nome { font-size: 22px; font-weight: 800; }
+.produto-marca { font-size: 16px; color: var(--cor-texto-suave); font-weight: 700; }
+.produto-categoria {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  background: #EAF1F4;
+  padding: 6px 12px;
+  border-radius: 30px;
+  white-space: nowrap;
+}
+.produto-preco { font-size: 30px; font-weight: 800; color: var(--cor-acento); }
+.produto-preco small { font-size: 16px; font-weight: 700; color: var(--cor-texto-suave); }
+
+.tag-confianca {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 30px;
+}
+.tag-confiavel { color: #0E6B3D; background: var(--cor-lucro-claro); }
+.tag-medio     { color: #9A6400; background: #FBEFD3; }
+
+.produto-fornecedor { font-size: 17px; color: var(--cor-texto-suave); }
+.produto-fornecedor b { color: var(--cor-texto); }
+
+/* ---------- 13. Rodapé ---------- */
+.rodape {
+  text-align: center;
+  padding: 24px 18px 40px;
+  font-size: 15px;
+  color: var(--cor-texto-suave);
+}
+
+/* ---------- 14. Acessibilidade: foco visível ---------- */
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 4px solid var(--cor-acento);
+  outline-offset: 2px;
+}
+
+/* ---------- 15. RESPONSIVO · Notebook / telas largas ---------- */
+@media (min-width: 720px) {
+  .cartoes-destaque { grid-template-columns: repeat(3, 1fr); }
+  .bloco-grafico { grid-template-columns: 200px 1fr; }
+  .resultados { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1000px) {
+  .resultados { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- 16. Respeita quem prefere menos animação ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sistema simples de gestão financeira e cotação de materiais para oficina de funilaria e pintura." />
+  <title>Oficina · Financeiro e Preços</title>
+  <!-- Fonte arredondada e de fácil leitura (com reserva do sistema caso não carregue) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ======================= CABEÇALHO ======================= -->
+  <header class="topo">
+    <div class="topo-conteudo">
+      <div class="marca">
+        <span class="marca-icone" aria-hidden="true">🎨</span>
+        <div>
+          <h1 class="marca-titulo">Minha Oficina</h1>
+          <p class="marca-sub">Funilaria e Pintura</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Abas principais: grandes, sempre visíveis, sem menu escondido -->
+    <nav class="abas" aria-label="Menu principal">
+      <button class="aba aba-ativa" data-aba="financeiro" aria-pressed="true">
+        <span class="aba-icone" aria-hidden="true">💰</span>
+        <span>Financeiro</span>
+      </button>
+      <button class="aba" data-aba="materiais" aria-pressed="false">
+        <span class="aba-icone" aria-hidden="true">🔍</span>
+        <span>Buscar Preços</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Aviso grande de "Salvo com sucesso" etc. -->
+  <div id="aviso" class="aviso" role="status" aria-live="polite" hidden></div>
+
+  <main class="conteudo">
+
+    <!-- ============================================================ -->
+    <!-- ABA 1 · GESTÃO FINANCEIRA                                     -->
+    <!-- ============================================================ -->
+    <section id="painel-financeiro" class="painel painel-ativo">
+
+      <!-- Linha de controle: seletor de mês + importar planilha -->
+      <div class="barra-controle">
+        <label class="campo-mes">
+          <span class="campo-mes-rotulo">Mês que você quer ver:</span>
+          <select id="seletor-mes" class="seletor-mes"></select>
+        </label>
+
+        <div class="importar">
+          <!-- Botão visível de importação de planilha CSV -->
+          <input type="file" id="arquivo-csv" accept=".csv" hidden />
+          <button id="botao-importar" class="botao botao-secundario">
+            <span aria-hidden="true">📄</span> Importar Planilha (.CSV)
+          </button>
+        </div>
+      </div>
+
+      <!-- Cartões de destaque: Faturamento, Materiais, Lucro -->
+      <div class="cartoes-destaque">
+        <div class="cartao cartao-faturamento">
+          <p class="cartao-rotulo">Faturamento (o que entrou)</p>
+          <p class="cartao-valor" id="valor-faturamento">R$ 0,00</p>
+        </div>
+        <div class="cartao cartao-gastos">
+          <p class="cartao-rotulo">Gasto com Materiais</p>
+          <p class="cartao-valor" id="valor-gastos">R$ 0,00</p>
+        </div>
+        <div class="cartao cartao-lucro">
+          <p class="cartao-rotulo">Lucro Líquido (o que sobrou)</p>
+          <p class="cartao-valor" id="valor-lucro">R$ 0,00</p>
+        </div>
+      </div>
+
+      <!-- Indicador visual de lucro (rosquinha) + barra -->
+      <div class="bloco-grafico">
+        <div class="rosquinha-area">
+          <div class="rosquinha" id="rosquinha" role="img" aria-label="Porcentagem de lucro">
+            <div class="rosquinha-centro">
+              <span id="rosquinha-numero">0%</span>
+              <small>de lucro</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="barra-area">
+          <p class="barra-titulo">Quanto do faturamento virou lucro</p>
+          <div class="barra-fundo" role="img" aria-label="Barra de proporção de lucro">
+            <div class="barra-preenchida" id="barra-lucro"></div>
+          </div>
+          <p class="barra-legenda">
+            <span class="ponto ponto-lucro"></span> Lucro &nbsp;&nbsp;
+            <span class="ponto ponto-gasto"></span> Gastos
+          </p>
+        </div>
+      </div>
+
+      <!-- Lista de gastos categorizados -->
+      <div class="bloco-lista">
+        <h2 class="bloco-titulo">Onde o dinheiro foi gasto</h2>
+        <ul class="lista-gastos" id="lista-gastos"></ul>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- ABA 2 · BUSCA DE MATERIAIS E FERRAMENTAS                      -->
+    <!-- ============================================================ -->
+    <section id="painel-materiais" class="painel">
+
+      <div class="busca-topo">
+        <h2 class="bloco-titulo">Procurar material ou ferramenta</h2>
+
+        <div class="busca-linha">
+          <input
+            type="text"
+            id="campo-busca"
+            class="campo-busca"
+            placeholder="Ex: verniz, massa, lixa..."
+            aria-label="Digite o que você procura"
+          />
+          <button id="botao-buscar" class="botao botao-primario">
+            <span aria-hidden="true">🔍</span> Buscar
+          </button>
+        </div>
+
+        <!-- Filtros rápidos por categoria -->
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria">
+          <button class="filtro filtro-ativo" data-categoria="Todos">Todos</button>
+          <button class="filtro" data-categoria="Tintas">Tintas</button>
+          <button class="filtro" data-categoria="Vernizes">Vernizes</button>
+          <button class="filtro" data-categoria="Massas">Massas</button>
+          <button class="filtro" data-categoria="Lixas">Lixas</button>
+          <button class="filtro" data-categoria="Ferramentas">Ferramentas</button>
+          <button class="filtro" data-categoria="Acessórios">Acessórios</button>
+        </div>
+      </div>
+
+      <!-- Cartões de resultado -->
+      <div class="resultados" id="resultados"></div>
+
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <p>Feito para facilitar o dia a dia da oficina. Os dados começam preenchidos como exemplo.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
