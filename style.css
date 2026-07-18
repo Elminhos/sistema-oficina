@@ -378,24 +378,40 @@ body {
   border-radius: 30px;
   white-space: nowrap;
 }
-.produto-preco { font-size: 30px; font-weight: 800; color: var(--cor-acento); }
-.produto-preco small { font-size: 16px; font-weight: 700; color: var(--cor-texto-suave); }
-
-.tag-confianca {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: flex-start;
-  font-size: 16px;
-  font-weight: 800;
-  padding: 8px 14px;
-  border-radius: 30px;
+/* Botões que levam para a busca real nas lojas */
+.produto-lojas {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 2px solid var(--borda);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.tag-confiavel { color: #0E6B3D; background: var(--cor-lucro-claro); }
-.tag-medio     { color: #9A6400; background: #FBEFD3; }
-
-.produto-fornecedor { font-size: 17px; color: var(--cor-texto-suave); }
-.produto-fornecedor b { color: var(--cor-texto); }
+.produto-lojas-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cor-texto-suave);
+}
+.botao-loja {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 19px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--cor-primaria);
+  background: #EAF1F4;
+  border: 2px solid #C6D8E0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: all .15s ease;
+}
+.botao-loja:hover {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria-esc);
+  color: #FFFFFF;
+}
+.botao-loja .seta { margin-left: auto; font-size: 18px; }
 
 /* ---------- 13. Rodapé ---------- */
 .rodape {

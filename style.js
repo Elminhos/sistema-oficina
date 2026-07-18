@@ -62,21 +62,50 @@ let lancamentos = [
    confianca: "confiavel" (etiqueta verde) ou "medio" (etiqueta amarela).
 */
 const materiais = [
-  { nome: "Massa Poliéster (Plástica)",     marca: "Maxi Rubber",    categoria: "Massas",      preco: 34.00,  unidade: "lata 900g", confianca: "confiavel", loja: "Auto lojas / Casa da Tinta" },
-  { nome: "Massa Rápida Fina",              marca: "Sinteko",        categoria: "Massas",      preco: 42.00,  unidade: "kit",       confianca: "confiavel", loja: "Distribuidora automotiva" },
-  { nome: "Verniz PU 900ml + Catalisador",  marca: "Anjo",           categoria: "Vernizes",    preco: 119.00, unidade: "kit",       confianca: "confiavel", loja: "Casa da Tinta" },
-  { nome: "Verniz PU HS Alto Brilho",       marca: "Lazzuril",       categoria: "Vernizes",    preco: 165.00, unidade: "kit",       confianca: "medio",     loja: "Loja especializada" },
-  { nome: "Tinta Poliéster Automotiva",     marca: "Wanda",          categoria: "Tintas",      preco: 145.00, unidade: "litro",     confianca: "confiavel", loja: "Distribuidora de tintas" },
-  { nome: "Primer PU (Fundo)",              marca: "Anjo",           categoria: "Tintas",      preco: 98.00,  unidade: "kit",       confianca: "confiavel", loja: "Casa da Tinta" },
-  { nome: "Lixa d'Água Grão 400",           marca: "Norton",         categoria: "Lixas",       preco: 3.50,   unidade: "folha",     confianca: "confiavel", loja: "Ferragens / Auto center" },
-  { nome: "Lixa d'Água Grão 600",           marca: "3M",             categoria: "Lixas",       preco: 4.20,   unidade: "folha",     confianca: "medio",     loja: "Ferragens" },
-  { nome: "Disco de Lixa Hookit Grão 80",   marca: "3M",             categoria: "Lixas",       preco: 6.90,   unidade: "disco",     confianca: "confiavel", loja: "Distribuidora automotiva" },
-  { nome: "Catalisador para Verniz",        marca: "Anjo",           categoria: "Acessórios",  preco: 28.00,  unidade: "frasco",    confianca: "confiavel", loja: "Casa da Tinta" },
-  { nome: "Thinner / Solvente 5L",          marca: "Baston",         categoria: "Acessórios",  preco: 62.00,  unidade: "galão 5L",  confianca: "medio",     loja: "Distribuidora" },
-  { nome: "Fita Crepe Automotiva 18mm",     marca: "Adere",          categoria: "Acessórios",  preco: 9.90,   unidade: "rolo",      confianca: "confiavel", loja: "Auto center" },
-  { nome: "Pistola de Pintura HVLP 1.4mm",  marca: "Steula",         categoria: "Ferramentas", preco: 189.00, unidade: "unidade",   confianca: "confiavel", loja: "Loja de ferramentas" },
-  { nome: "Lixadeira Roto-Orbital",         marca: "Vonder",         categoria: "Ferramentas", preco: 320.00, unidade: "unidade",   confianca: "medio",     loja: "Loja de ferramentas" },
-  { nome: "Máscara Respiratória + Filtros",  marca: "3M",             categoria: "Ferramentas", preco: 145.00, unidade: "kit",       confianca: "confiavel", loja: "EPI / Segurança" },
+  { nome: "Massa Poliéster (Plástica)",    marca: "Maxi Rubber", categoria: "Massas", busca: "massa poliester automotiva maxi rubber" },
+  { nome: "Massa Rápida Fina",             marca: "Sinteko",     categoria: "Massas", busca: "massa rapida fina automotiva" },
+  { nome: "Verniz PU 900ml + Catalisador", marca: "Anjo",        categoria: "Vernizes", busca: "verniz pu automotivo anjo com catalisador" },
+  { nome: "Verniz PU HS Alto Brilho",      marca: "Lazzuril",    categoria: "Vernizes",     busca: "verniz pu hs alto brilho automotivo" },
+  { nome: "Tinta Poliéster Automotiva",    marca: "Wanda",       categoria: "Tintas", busca: "tinta poliester automotiva wanda" },
+  { nome: "Primer PU (Fundo)",             marca: "Anjo",        categoria: "Tintas", busca: "primer pu automotivo fundo anjo" },
+  { nome: "Lixa d'Água Grão 400",          marca: "Norton",      categoria: "Lixas", busca: "lixa dagua 400 norton" },
+  { nome: "Lixa d'Água Grão 600",          marca: "3M",          categoria: "Lixas",     busca: "lixa dagua 600 3m" },
+  { nome: "Disco de Lixa Hookit Grão 80",  marca: "3M",          categoria: "Lixas", busca: "disco de lixa hookit 80 3m" },
+  { nome: "Catalisador para Verniz",       marca: "Anjo",        categoria: "Acessórios", busca: "catalisador para verniz automotivo" },
+  { nome: "Thinner / Solvente 5L",         marca: "Baston",      categoria: "Acessórios",     busca: "thinner automotivo 5 litros" },
+  { nome: "Fita Crepe Automotiva 18mm",    marca: "Adere",       categoria: "Acessórios", busca: "fita crepe automotiva 18mm" },
+  { nome: "Pistola de Pintura HVLP 1.4mm", marca: "Steula",      categoria: "Ferramentas", busca: "pistola de pintura hvlp 1.4 automotiva" },
+  { nome: "Lixadeira Roto-Orbital",        marca: "Vonder",      categoria: "Ferramentas",     busca: "lixadeira roto orbital automotiva" },
+  { nome: "Máscara Respiratória + Filtros",marca: "3M",          categoria: "Ferramentas", busca: "mascara respiratoria 3m com filtro pintura" },
+];
+
+/*
+   LOJAS ONDE PROCURAR
+   Cada loja monta o endereço de busca a partir do termo do produto.
+   Usamos a PÁGINA DE BUSCA da loja (e não o link de um anúncio específico)
+   porque anúncio sai do ar e o link quebra — a busca funciona sempre.
+
+   Para adicionar outra loja, é só copiar um bloco abaixo e ajustar o endereço.
+*/
+const lojas = [
+  {
+    nome: "Mercado Livre",
+    montarLink: function (termo) {
+      return "https://lista.mercadolivre.com.br/" + termo.replace(/\s+/g, "-");
+    },
+  },
+  {
+    nome: "Loja do Mecânico",
+    montarLink: function (termo) {
+      return "https://www.lojadomecanico.com.br/buscar/" + termo.replace(/\s+/g, "-");
+    },
+  },
+  {
+    nome: "Amazon",
+    montarLink: function (termo) {
+      return "https://www.amazon.com.br/s?k=" + encodeURIComponent(termo);
+    },
+  },
 ];
 
 
@@ -257,10 +286,6 @@ let categoriaAtiva = "Todos";
 
 // Monta o HTML de um cartão de produto
 function cartaoProduto(p) {
-  const confiavel = p.confianca === "confiavel";
-  const tagClasse = confiavel ? "tag-confiavel" : "tag-medio";
-  const tagTexto = confiavel ? "✅ Preço Confiável" : "👍 Bom Custo-Benefício";
-
   return (
     '<article class="cartao-produto">' +
       '<div class="produto-topo">' +
@@ -270,10 +295,18 @@ function cartaoProduto(p) {
         '</div>' +
         '<span class="produto-categoria">' + p.categoria + '</span>' +
       '</div>' +
-      '<p class="produto-preco">' + formatarDinheiro(p.preco) +
-        ' <small>/ ' + p.unidade + '</small></p>' +
-      '<span class="tag-confianca ' + tagClasse + '">' + tagTexto + '</span>' +
-      '<p class="produto-fornecedor">Onde comprar: <b>' + p.loja + '</b></p>' +
+      '<div class="produto-lojas">' +
+        '<p class="produto-lojas-titulo">Ver preço de hoje nas lojas:</p>' +
+        lojas.map(function (loja) {
+          return (
+            '<a class="botao-loja" target="_blank" rel="noopener noreferrer" href="' +
+              loja.montarLink(p.busca) + '">' +
+              '<span aria-hidden="true">🛒</span> ' + loja.nome +
+              '<span class="seta" aria-hidden="true">↗</span>' +
+            '</a>'
+          );
+        }).join("") +
+      '</div>' +
     '</article>'
   );
 }
