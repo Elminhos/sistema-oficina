@@ -15,6 +15,26 @@
 
 
 /* ============================================================
+   ⭐ CONFIGURAÇÃO DA PLANILHA ONLINE (Google Sheets) ⭐
+
+   Cole abaixo o endereço da planilha publicada como CSV.
+   Enquanto estiver vazio (""), o app usa os dados de exemplo
+   ou a planilha importada pelo botão.
+
+   COMO PEGAR ESSE ENDEREÇO:
+   1) Abra a planilha no Google Sheets
+   2) Menu: Arquivo > Compartilhar > Publicar na web
+   3) Em "Vincular", escolha a ABA certa e o formato
+      "Valores separados por vírgula (.csv)"
+   4) Clique em Publicar e copie o endereço gerado
+   5) Cole aqui dentro das aspas
+
+   Fica algo assim:
+   "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?gid=0&single=true&output=csv"
+   ============================================================ */
+const URL_PLANILHA = "";
+
+/* ============================================================
    1. DADOS
    ============================================================ */
 
@@ -27,7 +47,17 @@
    Quando a planilha real chegar, esta lista será substituída pela
    importação do CSV (ver seção 6).
 */
-let lancamentos = [
+/*
+   ONDE OS DADOS FICAM SALVOS
+   Quando uma planilha é importada, ela é guardada na memória do navegador
+   deste aparelho. Assim, ao fechar e abrir o app de novo, os dados reais
+   continuam lá — os dados de exemplo abaixo só aparecem enquanto nenhuma
+   planilha tiver sido importada.
+*/
+const CHAVE_SALVA = "oficina_lancamentos";
+
+// Dados de exemplo (usados só até a primeira importação)
+const lancamentosExemplo = [
   // ---------- MARÇO 2025 ----------
   { mes: "Março 2025",  tipo: "Entrada", categoria: "Serviços",   descricao: "Pintura completa Gol",     valor: 3800 },
   { mes: "Março 2025",  tipo: "Entrada", categoria: "Serviços",   descricao: "Funilaria porta Corolla",  valor: 1500 },
@@ -55,6 +85,40 @@ let lancamentos = [
   { mes: "Maio 2025",   tipo: "Saida",   categoria: "Lixa",       descricao: "Lixas d'água variadas",    valor: 70 },
   { mes: "Maio 2025",   tipo: "Saida",   categoria: "Solvente",   descricao: "Thinner 5L",               valor: 62 },
 ];
+
+// Guarda a planilha importada na memória do navegador
+function salvarNoNavegador(dados) {
+  try {
+    localStorage.setItem(CHAVE_SALVA, JSON.stringify(dados));
+    return true;
+  } catch (erro) {
+    return false; // navegador sem permissão de salvar (modo anônimo, por ex.)
+  }
+}
+
+// Busca a planilha salva. Devolve null se nunca importaram nada.
+function lerDoNavegador() {
+  try {
+    const texto = localStorage.getItem(CHAVE_SALVA);
+    if (!texto) return null;
+    const dados = JSON.parse(texto);
+    return Array.isArray(dados) && dados.length > 0 ? dados : null;
+  } catch (erro) {
+    return null;
+  }
+}
+
+// Apaga a planilha salva e volta aos dados de exemplo
+function apagarDoNavegador() {
+  try { localStorage.removeItem(CHAVE_SALVA); } catch (erro) { /* ignora */ }
+}
+
+/*
+   Lançamentos em uso agora.
+   Se já existe planilha salva neste aparelho, ela tem prioridade
+   sobre os dados de exemplo.
+*/
+let lancamentos = lerDoNavegador() || lancamentosExemplo;
 
 /*
    BASE DE MATERIAIS — produtos reais de funilaria com preço médio de
@@ -479,6 +543,90 @@ function mapearLinhas(linhasCSV) {
   });
 }
 
+/*
+   Busca a planilha online e atualiza o app.
+   Se der erro (sem internet, link errado), mantém o que já estava
+   na tela em vez de deixar o app vazio.
+*/
+function buscarPlanilhaOnline(avisarNaTela) {
+  if (!URL_PLANILHA) return; // não configurada ainda
+
+  const faixa = document.getElementById("origem-dados");
+  faixa.className = "origem origem-carregando";
+  faixa.innerHTML = '<span class="origem-texto">⏳ Buscando dados da planilha...</span>';
+
+  // O "?t=" com a hora evita que o navegador entregue uma versão velha
+  fetch(URL_PLANILHA + (URL_PLANILHA.indexOf("?") > -1 ? "&" : "?") + "t=" + Date.now())
+    .then(function (resposta) {
+      if (!resposta.ok) throw new Error("resposta " + resposta.status);
+      return resposta.text();
+    })
+    .then(function (texto) {
+      const novos = mapearLinhas(lerCSV(texto));
+      if (novos.length === 0) throw new Error("planilha vazia");
+
+      lancamentos = novos;
+      salvarNoNavegador(novos); // guarda uma cópia para funcionar sem internet
+
+      preencherSeletorMeses();
+      const seletor = document.getElementById("seletor-mes");
+      if (seletor.value) mostrarMes(seletor.value);
+      atualizarOrigemDados();
+
+      if (avisarNaTela) mostrarAviso("Dados atualizados!");
+    })
+    .catch(function () {
+      atualizarOrigemDados();
+      mostrarAviso("Não consegui buscar a planilha agora. Mostrando os últimos dados salvos.", true);
+    });
+}
+
+/*
+   Mostra na tela de onde vêm os dados que estão aparecendo:
+   da planilha da oficina ou dos exemplos.
+*/
+function atualizarOrigemDados() {
+  const area = document.getElementById("origem-dados");
+  const temDados = lerDoNavegador() !== null;
+
+  // MODO ONLINE: planilha do Google configurada
+  if (URL_PLANILHA) {
+    area.className = "origem origem-real";
+    area.innerHTML =
+      '<span class="origem-texto">✅ Dados da planilha da oficina</span>' +
+      '<button id="botao-atualizar" class="botao-limpar">🔄 Atualizar agora</button>';
+    document.getElementById("botao-atualizar").addEventListener("click", function () {
+      buscarPlanilhaOnline(true);
+    });
+    return;
+  }
+
+  // MODO IMPORTAÇÃO: planilha enviada pelo botão
+  if (temDados) {
+    area.className = "origem origem-real";
+    area.innerHTML =
+      '<span class="origem-texto">✅ Mostrando os dados da sua planilha</span>' +
+      '<button id="botao-limpar" class="botao-limpar">Voltar aos dados de exemplo</button>';
+    document.getElementById("botao-limpar").addEventListener("click", function () {
+      if (!confirm("Apagar a planilha importada e voltar aos dados de exemplo?")) return;
+      apagarDoNavegador();
+      lancamentos = lancamentosExemplo;
+      preencherSeletorMeses();
+      const seletor = document.getElementById("seletor-mes");
+      if (seletor.value) mostrarMes(seletor.value);
+      atualizarOrigemDados();
+      mostrarAviso("Voltamos aos dados de exemplo.");
+    });
+    return;
+  }
+
+  // MODO EXEMPLO: nada configurado ainda
+  area.className = "origem origem-exemplo";
+  area.innerHTML =
+    '<span class="origem-texto">ℹ️ Estes são dados de exemplo. ' +
+    'Importe a planilha para ver os números reais.</span>';
+}
+
 // Liga o botão "Importar Planilha (.CSV)"
 function iniciarImportacao() {
   const botao = document.getElementById("botao-importar");
@@ -501,15 +649,23 @@ function iniciarImportacao() {
           return;
         }
 
-        // Substitui os dados de exemplo pelos dados reais da planilha
+        // Substitui os dados em uso pelos dados reais da planilha
         lancamentos = novos;
+
+        // Guarda no aparelho para continuar valendo nas próximas aberturas
+        const salvou = salvarNoNavegador(novos);
 
         // Redesenha tudo com os dados novos
         preencherSeletorMeses();
         const seletor = document.getElementById("seletor-mes");
         if (seletor.value) mostrarMes(seletor.value);
+        atualizarOrigemDados();
 
-        mostrarAviso("Planilha importada com sucesso! (" + novos.length + " lançamentos)");
+        if (salvou) {
+          mostrarAviso("Planilha importada e salva! (" + novos.length + " lançamentos)");
+        } else {
+          mostrarAviso("Planilha importada, mas este navegador não permitiu salvar.", true);
+        }
       } catch (erro) {
         mostrarAviso("Não consegui ler este arquivo. Verifique se é um CSV.", true);
       }
@@ -552,4 +708,8 @@ document.addEventListener("DOMContentLoaded", function () {
   iniciarFinanceiro();
   iniciarBusca();
   iniciarImportacao();
+  atualizarOrigemDados();
+
+  // Se a planilha online estiver configurada, busca os dados mais recentes
+  buscarPlanilhaOnline(false);
 });

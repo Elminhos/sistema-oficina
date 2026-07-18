@@ -190,6 +190,35 @@ body {
 }
 .botao-secundario:hover { background: #EAF1F4; }
 
+/* Faixa que diz de onde vêm os dados */
+.origem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: var(--raio);
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.origem-real    { background: var(--cor-lucro-claro); color: #0E6B3D; border: 2px solid #A9DCC0; }
+.origem-exemplo { background: #FBEFD3;                color: #7A5000; border: 2px solid #EBD49A; }
+.origem-carregando { background: #E5EDF2;             color: #34505E; border: 2px solid #C3D4DE; }
+.botao-limpar {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 2px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.botao-limpar:hover { background: rgba(0, 0, 0, .06); }
+
 /* ---------- 8. Cartões de destaque ---------- */
 .cartoes-destaque {
   display: grid;
